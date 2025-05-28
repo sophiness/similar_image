@@ -1,7 +1,4 @@
-# 맨 위에 추가 (import chromadb 전에)
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel

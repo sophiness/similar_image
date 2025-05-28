@@ -1,3 +1,8 @@
+# 맨 위에 추가 (import chromadb 전에)
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
 import requests
 import torch
 import numpy as np
@@ -20,17 +25,18 @@ def initialize_models():
         _model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
         _processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
         _model.eval()
-        print("✅ CLIP model loaded")
     
     if _collection is None:
         # ChromaDB 연결
         client = chromadb.PersistentClient(path="./image_embeddings_db")
         _collection = client.get_collection("image_embeddings")
-        print("✅ ChromaDB connected")
 
 def download_image_from_url(image_url: str) -> Image.Image:
     """웹 URL에서 이미지 다운로드"""
     response = requests.get(image_url)
+    if response.status_code != 200:
+        raise Exception(f"이미지 다운로드 실패: HTTP {response.status_code}")
+    
     image = Image.open(BytesIO(response.content)).convert('RGB')
     return image
 
@@ -55,7 +61,7 @@ def search_chromadb(query_embedding: np.ndarray) -> list:
         n_results=3
     )
     
-    return results['ids'][0]
+    return results['ids'][0] if results['ids'] else []
 
 def search_similar_images(image_url: str) -> list:
     """
@@ -74,4 +80,3 @@ def search_similar_images(image_url: str) -> list:
     similar_ids = search_chromadb(query_embedding)
     
     return similar_ids
-
