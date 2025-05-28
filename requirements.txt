@@ -1,0 +1,20 @@
+# 웹 프레임워크
+fastapi==0.104.1
+uvicorn==0.24.0
+
+# HTTP 요청
+requests==2.31.0
+
+# 머신러닝 (최신 호환 버전)
+torch>=2.2.0
+transformers>=4.35.2
+numpy>=1.24.3
+
+# 이미지 처리
+Pillow>=10.1.0
+
+# 벡터 데이터베이스
+chromadb>=0.4.18
+
+# 데이터 검증 (FastAPI 의존성)
+pydantic>=2.5.0
